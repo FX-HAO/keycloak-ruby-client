@@ -1,3 +1,5 @@
+require 'keycloak/model/base_representation'
 require 'keycloak/model/credential_representation'
 require 'keycloak/model/role_representation'
 require 'keycloak/model/user_representation'
+require 'keycloak/model/client_representation'

@@ -65,7 +65,7 @@ module Keycloak
         h = {}
         self.class.attributes.each do |attr|
           v = instance_variable_get("@#{attr}")
-          h[attr] = v if v
+          h[attr] = v unless v.nil?
         end
         h
       end

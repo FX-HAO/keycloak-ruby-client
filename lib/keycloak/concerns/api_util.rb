@@ -18,6 +18,10 @@ module Keycloak
       def get(url, headers: {}, params: {}, try_refresh_token: true)
         raise NotImplementedError
       end
+
+      def delete(url, headers: {}, payload: nil, try_refresh_token: true)
+        raise NotImplementedError
+      end
     end
   end
 end

@@ -38,7 +38,7 @@ module Keycloak
 
     def parse_access_token(access_token)
       decoded_token = JWT.decode access_token, public_key, false, { :algorithm => 'RS256' }
-      AccessToken.new access_token, decoded_token
+      AccessToken.new self, access_token, decoded_token
     end
 
     def client

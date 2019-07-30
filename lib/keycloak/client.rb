@@ -3,6 +3,10 @@ module Keycloak
     include API::UserResources
     include API::RoleResources
     include API::ProtectionResources
+    include API::ClientResources
+    include API::ClientRoleResources
+
+    attr_reader :auth_server_url, :realm
 
     def initialize(auth_server_url, realm)
       @auth_server_url = auth_server_url
@@ -17,9 +21,14 @@ module Keycloak
       "#{@auth_server_url}/admin/realms/#{@realm}"
     end
 
-    def authenticate(username, password, grant_type, client_id, realm = @realm)
+    def authenticate(username, password, grant_type, client_id, realm = @realm, auto: true)
       @authenticate_realm = realm
       @authenticate_client_id = client_id
+      if auto
+        @authenticate_username = username
+        @authenticate_password = password
+        @authenticate_grant_type = grant_type
+      end
 
       url = "#{@auth_server_url}/realms/#{realm}/protocol/openid-connect/token"
       res = JSON.parse post(url, {
@@ -61,10 +70,16 @@ module Keycloak
     def try_refresh_token!
       return unless access_token_expired?
 
-      !refresh_token_expired? ? refresh_token! : raise("Refresh token expired, you should re-authenticate to obtain an access token")
+      if !refresh_token_expired?
+        refresh_token!
+      elsif @authenticate_username && @authenticate_password
+        authenticate(@authenticate_username, @authenticate_password, @authenticate_grant_type, @authenticate_client_id, @authenticate_realm, auto: false)
+      else
+        raise("Refresh token expired, you should re-authenticate to obtain an access token or enable auto authentication")
+      end
     end
 
-    def post(url, payload, headers = {}, try_refresh_token: true)
+    def post(url, payload, headers: {}, try_refresh_token: true)
       try_refresh_token! if try_refresh_token
 
       RestClient.post(url, payload, {
@@ -81,6 +96,17 @@ module Keycloak
         accept: "application/json",
         params: params
       }.merge(headers))
+    end
+
+    def delete(url, headers: {}, payload: nil, try_refresh_token: true)
+      try_refresh_token! if try_refresh_token
+
+      RestClient::Request.execute(
+        method: :delete, url: url, payload: payload,
+        headers: {
+          authorization: "Bearer #{@access_token}",
+          accept: "application/json"
+        }.merge(headers))
     end
   end
 end

@@ -8,7 +8,7 @@ written with some methods that derive from rails.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'keycloak-ruby-client'
+gem 'keycloak-ruby-client', require: 'keycloak'
 ```
 
 And then execute:
@@ -43,7 +43,7 @@ Then you can authenticate your keycloak JWT token:
 
 ```ruby
 token = "your_bearer_token"
-keycloak_token = Keycloak::Realm.shundao_admin.parse_access_token(token) # an instance of Keycloak::AccessToken
+keycloak_token =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           .parse_access_token(token) # an instance of Keycloak::AccessToken
 raise CanCan::AccessDenied if keycloak_token.expired? || !keycloak_token.has_role?("admin")
 
 # authentication succeeded 
@@ -98,6 +98,45 @@ user_rep = Keycloak::Model::UserRepresentation.new({
 })
 mapping_roles = role_store.map { |entry| {id: entry[1].id , name: entry[1].name} }
 client.create_user(user_rep, mapping_roles)
+```
+
+### Connect your rails user model with keycloak user entity:
+
+Firstly, we create a user model with `bundle exec rails g model user`
+
+In you migration file:
+```Ruby
+class CreateUsers < ActiveRecord::Migration[5.1]
+  def change
+    create_table :users, id: :string do |t|
+      t.string :username
+    end
+  end
+end
+```
+
+Authenticate your client in `config/initializers/keycloak.rb`:
+
+```ruby
+Keycloak::Realm.shundao_admin.client.authenticate(admin_username, admin_password, "password", "admin-cli", "master", auto: true)
+```
+
+Your model file `User.rb` as the following:
+
+```ruby
+class User < ApplicationRecord
+  include Keycloak::UserEntity
+  
+  use_keycloak_client Keycloak::Realm.shundao_admin.client
+end
+```
+
+Finally, you can get user info with `User` model:
+
+```ruby
+user = User.take
+puts user.user_info
+puts user.realm_roles
 ```
 
 ## Development

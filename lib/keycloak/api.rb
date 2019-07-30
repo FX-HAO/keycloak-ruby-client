@@ -1,3 +1,5 @@
 require 'keycloak/api/protection_resources'
 require 'keycloak/api/role_resources'
 require 'keycloak/api/user_resources'
+require 'keycloak/api/client_resources'
+require 'keycloak/api/client_role_resources'

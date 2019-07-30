@@ -1,9 +1,10 @@
 module Keycloak
   class AccessToken
     attr_reader :metadata, :jti, :exp, :sub, :azp, :roles, :scope,
-                :phone_number, :username, :access_token
+                :phone_number, :username, :access_token, :client_roles
 
-    def initialize(access_token, decoded_token)
+    def initialize(realm, access_token, decoded_token)
+      @realm = realm
       @access_token = access_token
       @metadata = decoded_token[0]
       @jti = @metadata["jti"]
@@ -12,6 +13,9 @@ module Keycloak
       @azp = @metadata["azp"]
       if realm_access = @metadata["realm_access"]
         @roles = realm_access["roles"] || []
+      end
+      if resource_access = @metadata["resource_access"]
+        @client_roles = resource_access.dig(realm.name, "roles") || []
       end
       @scope = @metadata["scope"]
       @phone_number = @metadata["phone_number"]
@@ -26,13 +30,12 @@ module Keycloak
       exp < DateTime.now
     end
 
-    def has_role?(role)
-      roles.include? role.to_s
+    def has_role?(role, client_role = true)
+      roles.include?(role.to_s) || (client_role && has_client_role?(role))
     end
-    alias_method :has_spree_role?, :has_role?
 
-    def blocked_at
-      nil
+    def has_client_role?(role)
+      client_roles.include? role.to_s
     end
 
     def method_missing(name, *args, &block)
