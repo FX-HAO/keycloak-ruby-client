@@ -1,5 +1,7 @@
 # Keycloak::Ruby::Client
 
+[![Gem Version](https://badge.fury.io/rb/keycloak-ruby-client.svg)](https://badge.fury.io/rb/keycloak-ruby-client)
+
 This is a keycloak client implementation in ruby. I mainly use this in a rails project, so this is 
 written with some methods that derive from rails.
 

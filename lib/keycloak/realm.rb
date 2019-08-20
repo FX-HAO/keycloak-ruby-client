@@ -1,10 +1,10 @@
 module Keycloak
-  class Configuration
-    attr_accessor :auth_server_url, :realm, :installation_file
-  end
-
   class Realm
     @realms = Concurrent::Map.new
+
+    class Configuration
+      attr_accessor :auth_server_url, :realm, :installation_file
+    end
 
     class << self
       def register(&block)

@@ -9,13 +9,13 @@ module Keycloak
       def use_keycloak_client(client)
         @keycloak_client = client
       end
-
-      def keycloak_identify
-        id
-      end
     end
 
     included do
+      def keycloak_identify
+        id
+      end
+
       def user_info(reload = false)
         _set_or_get_keycloak_data(:user_info, reload) { keycloak_client.find_user(keycloak_identify) }
       end

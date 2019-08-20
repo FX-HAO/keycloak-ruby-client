@@ -30,8 +30,8 @@ module Keycloak
       exp < DateTime.now
     end
 
-    def has_role?(role, client_role = true)
-      roles.include?(role.to_s) || (client_role && has_client_role?(role))
+    def has_role?(role, include_client_role = true)
+      roles.include?(role.to_s) || (include_client_role && has_client_role?(role))
     end
 
     def has_client_role?(role)
