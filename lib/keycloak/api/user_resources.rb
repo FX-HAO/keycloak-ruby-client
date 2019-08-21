@@ -28,13 +28,18 @@ module Keycloak
       end
 
       # see https://www.keycloak.org/docs-api/6.0/rest-api/index.html#_users_resource for params details
+      #
+      # @return [Keycloak::Utils::RepresentationIterator] iterator of users
       def find_users(params = {})
-        res = JSON.parse(get(user_resources_url, params: params))
-        res.map { |user| Model::UserRepresentation.new user }
+        Utils::RepresentationIterator.new(self, params) do
+          res = JSON.parse(get(user_resources_url, params: params))
+          res.map { |user| Model::UserRepresentation.new user }
+        end
       end
 
+      # @return [Keycloak::Model::UserRepresentation] user representation
       def find_user_by_username(username)
-        find_users({username: username})[0]
+        find_users({username: username}).to_a[0]
       end
 
     end

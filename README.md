@@ -45,7 +45,7 @@ Then you can authenticate your keycloak JWT token:
 
 ```ruby
 token = "your_bearer_token"
-keycloak_token =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           .parse_access_token(token) # an instance of Keycloak::AccessToken
+keycloak_token = Keycloak::Realm.shundao_admin.parse_access_token(token) # an instance of Keycloak::AccessToken
 raise CanCan::AccessDenied if keycloak_token.expired? || !keycloak_token.has_role?("admin")
 
 # authentication succeeded 
@@ -100,6 +100,13 @@ user_rep = Keycloak::Model::UserRepresentation.new({
 })
 mapping_roles = role_store.map { |entry| {id: entry[1].id , name: entry[1].name} }
 client.create_user(user_rep, mapping_roles)
+
+# NOTE: It's worth noting that `to_a` may be costly if you have a large dataset of users, 
+# which could cause out-of-memory, but using `each` instead of `to_a` could save you if 
+# you really want traverse all users.
+client.find_users.to_a.each { |user| puts user.to_json } # possibly out of memory 
+client.find_users.each { |user| puts user.to_json } # no risk of out of memory
+
 ```
 
 ### Connect your rails user model with keycloak user entity:

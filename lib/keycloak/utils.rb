@@ -1,0 +1,1 @@
+require 'keycloak/utils/representation_iterator'
