@@ -103,7 +103,7 @@ client.create_user(user_rep, mapping_roles)
 
 # NOTE: It's worth noting that `to_a` may be costly if you have a large dataset of users, 
 # which could cause out-of-memory, but using `each` instead of `to_a` could save you if 
-# you really want traverse all users.
+# you really want iterate all users.
 client.find_users.to_a.each { |user| puts user.to_json } # possibly out of memory 
 client.find_users.each { |user| puts user.to_json } # no risk of out of memory
 

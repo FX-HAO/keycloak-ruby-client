@@ -14,11 +14,13 @@ module Keycloak
       #
       # @param user_rep [Keycloak::Model::UserRepresentation] user representation
       # @param roles [Array] an array of roles
+      # @return [String] id of the created user
       def create_user(user_rep, roles = [])
         res = post(user_resources_url, user_rep.to_json, headers: {content_type: :json})
         id = res.headers[:location].split("/")[-1]
-        return if roles.empty?
+        return id if roles.empty?
         add_role_mapping(id, roles)
+        id
       end
 
       # @param id [String] user id

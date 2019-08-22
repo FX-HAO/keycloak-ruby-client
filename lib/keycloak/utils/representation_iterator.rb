@@ -4,7 +4,7 @@ module Keycloak
     #
     # NOTE: It's worth noting that `to_a` may be costly if you have a large dataset of users,
     # which could cause out-of-memory, but using `each` instead of `to_a` could save you if
-    # you really want traverse all users.
+    # you really want iterate all users.
     class RepresentationIterator
       DEFAULT_PER_PAGE = 30
 
