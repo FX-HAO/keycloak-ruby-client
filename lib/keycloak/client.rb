@@ -39,8 +39,9 @@ module Keycloak
       }, try_refresh_token: false).body
       @access_token = res["access_token"]
       @refresh_token = res["refresh_token"]
-      @refresh_expires_in = DateTime.now + res["refresh_expires_in"].seconds
-      @expires_in = DateTime.now + res["expires_in"].seconds
+      now = DateTime.now
+      @refresh_expires_in = now + res["refresh_expires_in"].seconds
+      @expires_in = now + res["expires_in"].seconds
       true
     end
 
@@ -55,8 +56,9 @@ module Keycloak
       }, try_refresh_token: false)
       @access_token = res["access_token"]
       @refresh_token = res["refresh_token"]
-      @refresh_expires_in = DateTime.now + res["refresh_expires_in"].seconds
-      @expires_in = DateTime.now + res["expires_in"].seconds
+      now = DateTime.now
+      @refresh_expires_in = now + res["refresh_expires_in"].seconds
+      @expires_in = now + res["expires_in"].seconds
     end
 
     def access_token_expired?

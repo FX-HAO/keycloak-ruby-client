@@ -11,6 +11,11 @@ module Keycloak
         def field(name, type = :any)
           define_reader name, type
           define_writer name, type
+          snake_case_name = name.to_s.underscore
+          if name.to_s != snake_case_name
+            alias_method snake_case_name, name
+            alias_method "#{snake_case_name}=", "#{name}="
+          end
 
           name_sym = name.to_sym
           attributes << name_sym
