@@ -136,7 +136,9 @@ Your model file `User.rb` as the following:
 class User < ApplicationRecord
   include Keycloak::UserEntity
   
-  use_keycloak_client Keycloak::Realm.shundao_admin.client
+  def keycloak_client
+    Keycloak::Realm.shundao_admin.client
+  end
 end
 ```
 
