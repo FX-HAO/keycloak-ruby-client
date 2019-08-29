@@ -111,7 +111,17 @@ module Keycloak
         headers: {
           authorization: "Bearer #{@access_token}",
           accept: "application/json"
-        }.merge(headers))
+        }.merge(headers)
+      )
+    end
+
+    def put(url, payload, headers: {}, try_refresh_token: true)
+      try_refresh_token! if try_refresh_token
+
+      RestClient.put(url, payload, {
+        authorization: "Bearer #{@access_token}",
+        accept: "application/json"
+      }.merge(headers))
     end
   end
 end

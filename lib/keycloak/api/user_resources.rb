@@ -29,6 +29,11 @@ module Keycloak
         Model::UserRepresentation.new JSON.parse(get("#{user_resources_url}/#{id}"))
       end
 
+      # @param id [String] user id
+      def update_user(id, user_rep)
+        put("#{user_resources_url}/#{id}", user_rep.to_json, headers: {content_type: :json})
+      end
+
       # see https://www.keycloak.org/docs-api/6.0/rest-api/index.html#_users_resource for params details
       #
       # @return [Keycloak::Utils::RepresentationIterator] iterator of users

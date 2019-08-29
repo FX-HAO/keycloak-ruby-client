@@ -7,7 +7,7 @@ data = JSON.parse(File.read(File.join(File.dirname(__FILE__), '../config/keycloa
 $client = Keycloak::Client.new(auth_server_url, data["realm"])
 $client.authenticate(admin_username, admin_password, "password", "admin-cli", "master")
 
-$client.create_realm(Keycloak::Model::RealmRepresentation.new(id: data["realm"], realm: data["realm"], enabled: true)) rescue RestClient::Conflict
+$client.create_realm(Keycloak::Model::RealmRepresentation.new(id: $client.realm, realm: $client.realm, enabled: true)) rescue RestClient::Conflict
 
 
 RSpec.configure do |config|

@@ -22,6 +22,10 @@ module Keycloak
       def delete(url, headers: {}, payload: nil, try_refresh_token: true)
         raise NotImplementedError
       end
+
+      def put(url, payload, headers: {}, try_refresh_token: true)
+        raise NotImplementedError
+      end
     end
   end
 end
