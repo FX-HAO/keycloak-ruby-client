@@ -1,3 +1,5 @@
+require 'rest_client'
+
 module Keycloak
   class Client
     include API::UserResources
@@ -5,6 +7,7 @@ module Keycloak
     include API::ProtectionResources
     include API::ClientResources
     include API::ClientRoleResources
+    include API::RealmResources
 
     attr_reader :auth_server_url, :realm
 

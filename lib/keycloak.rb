@@ -1,3 +1,5 @@
+require 'rails'
+
 require_relative 'keycloak/version'
 require_relative 'keycloak/concerns'
 require_relative 'keycloak/access_token'
