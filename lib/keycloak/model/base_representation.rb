@@ -62,7 +62,9 @@ module Keycloak
 
       def initialize(payload = {})
         payload.each do |key, value|
-          send("#{key}=", value) if self.class.attributes.include?(key.to_sym)
+          if self.class.attributes.include?(key.to_sym) || self.class.attributes.include?(key.to_s.camelize(:lower).to_sym)
+            send("#{key}=", value)
+          end
         end
       end
 
