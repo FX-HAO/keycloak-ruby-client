@@ -33,6 +33,7 @@ module Keycloak
         @authenticate_grant_type = grant_type
       end
 
+      now = DateTime.now
       url = "#{@auth_server_url}/realms/#{realm}/protocol/openid-connect/token"
       res = JSON.parse post(url, {
         username: username,
@@ -42,7 +43,6 @@ module Keycloak
       }, try_refresh_token: false).body
       @access_token = res["access_token"]
       @refresh_token = res["refresh_token"]
-      now = DateTime.now
       @refresh_expires_in = now + res["refresh_expires_in"].seconds
       @expires_in = now + res["expires_in"].seconds
       true
