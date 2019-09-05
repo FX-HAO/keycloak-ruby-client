@@ -1,6 +1,5 @@
 module Keycloak
   module API
-    # see https://www.keycloak.org/docs-api/6.0/rest-api/index.html#_users_resource for params details
     module UserResources
       extend ActiveSupport::Concern
       include Concerns::APIUtil

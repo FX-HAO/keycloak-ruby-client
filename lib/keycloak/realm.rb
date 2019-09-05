@@ -37,7 +37,8 @@ module Keycloak
     end
 
     def parse_access_token(access_token)
-      decoded_token = JWT.decode access_token, public_key, false, { :algorithm => 'RS256' }
+      alg = JWT.decode(access_token, nil, false)[1]["alg"]
+      decoded_token = JWT.decode access_token, public_keys[alg], true, algorithm: alg
       AccessToken.new self, access_token, decoded_token
     end
 
@@ -47,12 +48,16 @@ module Keycloak
 
     private
 
-    def public_key
-      return @public_key if @public_key
+    def public_keys
+      return @public_keys if @public_keys
 
       keys = JSON.parse(RestClient.get("#{auth_server_url}/realms/#{realm}/protocol/openid-connect/certs").body)['keys']
-      jwk = JSON::JWK.new(keys[0])
-      @public_key = jwk.to_key
+      @public_keys = {}
+      keys.each do |key|
+        jwk = JSON::JWK.new(key)
+        @public_keys[key["alg"]] = jwk.to_key
+      end
+      @public_keys
     end
   end
 end
