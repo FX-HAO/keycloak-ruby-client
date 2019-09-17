@@ -41,7 +41,7 @@ module Keycloak
     def method_missing(name, *args, &block)
       regex = /^has_(.*?)_role\?$/
       if name.match?(regex)
-        return name.match(regex)[1]
+        return has_role?(name.match(regex)[1])
       end
 
       super
