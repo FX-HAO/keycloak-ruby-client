@@ -3,7 +3,7 @@ module Keycloak
     attr_reader :metadata, :jti, :exp, :sub, :azp, :roles, :scope,
                 :phone_number, :username, :access_token, :client_roles
 
-    def initialize(realm, access_token, decoded_token)
+    def initialize(realm, access_token, decoded_token, client_id = nil)
       @realm = realm
       @access_token = access_token
       @metadata = decoded_token[0]
@@ -15,11 +15,15 @@ module Keycloak
         @roles = realm_access["roles"] || []
       end
       if resource_access = @metadata["resource_access"]
-        @client_roles = resource_access.dig(realm.name, "roles") || []
+        @client_roles = (client_id && resource_access.dig(client_id, "roles")) || []
       end
       @scope = @metadata["scope"]
       @phone_number = @metadata["phone_number"]
       @username = @metadata["username"] || @metadata["preferred_username"]
+    end
+
+    def client_id
+      @azp
     end
 
     def authorization

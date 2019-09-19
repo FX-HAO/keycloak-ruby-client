@@ -36,10 +36,14 @@ module Keycloak
       realm
     end
 
-    def parse_access_token(access_token)
+    ParseAccessTokenError = Class.new(StandardError)
+
+    def parse_access_token(access_token, client_id:)
       alg = JWT.decode(access_token, nil, false)[1]["alg"]
       decoded_token = JWT.decode access_token, public_keys[alg], true, algorithm: alg
-      AccessToken.new self, access_token, decoded_token
+      azp = decoded_token[0]["azp"]
+      raise ParseAccessTokenError, "Unexpected client, expect #{client_id}, got #{azp}" if client_id && azp != client_id
+      AccessToken.new self, access_token, decoded_token, client_id
     end
 
     def client
