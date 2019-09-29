@@ -74,11 +74,11 @@ module Keycloak
           v = instance_variable_get("@#{attr}")
           h[attr] = v unless v.nil?
         end
-        h
+        h.as_json(*options)
       end
 
-      def to_json
-        as_json.to_json
+      def to_json(*options)
+        as_json(*options).to_json
       end
     end
   end
