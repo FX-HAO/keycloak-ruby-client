@@ -17,18 +17,23 @@ module Keycloak
       #   for more details.
       # @param access_token [Keycloak::AccessToken] access token
       # @return [Boolean] true if the permissions granted or false when forbidden
-      def granted_by_server(permissions, access_token)
+      def granted_by_server(permissions, access_token, extra_claims: {})
         url = admin_realm_url + "/protocol/openid-connect/token"
-        res = JSON.parse post(url, {
-            grant_type: "urn:ietf:params:oauth:grant-type:uma-ticket",
-            audience: @realm,
-            permission: permissions,
-            response_mode: "decision"
-          },
+        params = {
+          grant_type: "urn:ietf:params:oauth:grant-type:uma-ticket",
+          audience: @realm,
+          permission: permissions,
+          response_mode: "decision"
+        }
+        if !extra_claims.empty?
+          params[:claim_token] = Base64.strict_decode64(extra_claims.to_json)
+          params[:claim_token_format] = "urn:ietf:params:oauth:token-type:jwt"
+        end
+        res = JSON.parse post(url, params,
           headers: {content_type: :json, authorization: access_token.authorization},
           try_refresh_token: false
         )
-        res['result']
+        res["result"]
       rescue RestClient::Forbidden, RestClient::Unauthorized
         false
       end
