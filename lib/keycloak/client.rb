@@ -64,18 +64,18 @@ module Keycloak
       @expires_in = now + res["expires_in"].seconds
     end
 
-    def access_token_expired?
-      @expires_in && @expires_in < DateTime.now
+    def access_token_valid?
+      @expires_in && @expires_in > DateTime.now
     end
 
-    def refresh_token_expired?
-      @refresh_expires_in && @refresh_expires_in < DateTime.now
+    def refresh_token_valid?
+      @refresh_expires_in && @refresh_expires_in > DateTime.now
     end
 
     def try_refresh_token!
-      return unless access_token_expired?
+      return if access_token_valid?
 
-      if !refresh_token_expired?
+      if refresh_token_valid?
         refresh_token!
       elsif @authenticate_username && @authenticate_password
         authenticate(@authenticate_username, @authenticate_password, @authenticate_grant_type, @authenticate_client_id, @authenticate_realm, auto: false)
