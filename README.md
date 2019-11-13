@@ -109,6 +109,8 @@ client.find_users.each { |user| puts user.to_json } # no risk of out of memory
 
 ```
 
+For more examples, please take a look at [spec/api/](./spec/api/)
+
 ### Connect your rails user model with keycloak user entity:
 
 Firstly, we create a user model with `bundle exec rails g model user`
