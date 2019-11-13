@@ -5,8 +5,10 @@ module Keycloak
       include Concerns::APIUtil
 
       # @param realm_rep [Keycloak::Model::RealmRepresentation] realm representation
+      # @return [String] realm id
       def create_realm(realm_rep)
-        post("#{@auth_server_url}/admin/realms/", realm_rep.to_json, headers: {content_type: :json})
+        res = post("#{@auth_server_url}/admin/realms/", realm_rep.to_json, headers: {content_type: :json})
+        res.headers[:location].split("/")[-1]
       end
 
       # @param realm [String] realm name

@@ -1,11 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Keycloak::API::RoleResources do
-  let(:role_rep) do
-    Keycloak::Model::RoleRepresentation.new(
-      name: Faker::Hacker.abbreviation
-    )
-  end
+  let(:role_rep) { build(:role_rep) }
 
   it 'create_role & find_role_by_name' do
     $client.create_role(role_rep)
