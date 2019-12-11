@@ -39,7 +39,8 @@ module Keycloak
         username: username,
         password: password,
         grant_type: grant_type,
-        client_id: client_id
+        client_id: client_id,
+        scope: "offline_access"
       }, try_refresh_token: false).body
       @access_token = res["access_token"]
       @refresh_token = res["refresh_token"]
