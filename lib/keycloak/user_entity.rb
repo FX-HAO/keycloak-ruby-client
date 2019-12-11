@@ -2,6 +2,8 @@ module Keycloak
   module UserEntity
     extend ActiveSupport::Concern
 
+    attr_accessor :keycloak_token
+
     included do
       def keycloak_client
         raise NotImplementedError
@@ -20,7 +22,9 @@ module Keycloak
       end
 
       def has_role?(role)
-        realm_roles.map(&:name).include?(role)
+        keycloak_token ?
+          keycloak_token.has_role?(role) :
+          realm_roles.map(&:name).include?(role)
       end
 
       def _set_or_get_keycloak_data(attr_name, reload)
