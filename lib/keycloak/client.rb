@@ -8,6 +8,7 @@ module Keycloak
     include API::ClientResources
     include API::ClientRoleResources
     include API::RealmResources
+    include API::KeycloakAPIExtensionResources
 
     attr_reader :auth_server_url, :realm
 
