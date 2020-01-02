@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :user_rep, class: Keycloak::Model::UserRepresentation do
-    username    { Faker::Internet.username }
+    username    { Faker::Internet.user_name }
     email       { Faker::Internet.email }
     credentials do
       [

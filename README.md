@@ -152,6 +152,31 @@ puts user.user_info
 puts user.realm_roles
 ```
 
+### GraphQL (optional)
+
+Integrate `RepresentationIterator` into `graphql` to support GraphQL Connections
+
+```ruby
+require 'keycloak/graphql'
+```
+
+Now you can implement a GraphQL API to find users as the following:
+
+```ruby
+field :users, Types::KeycloakUserRepresentationType.connection_type, null: true, max_page_size: 30 do
+  argument :briefRepresentation, Boolean, required: false
+  argument :email, String, required: false
+  argument :firstName, String, required: false
+  argument :lastName, String, required: false
+  argument :search, String, required: false
+  argument :username, String, required: false
+end
+
+def users(**kwargs)
+  Keycloak::Realm.your_realm.client.find_users(**kwargs)
+end
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
