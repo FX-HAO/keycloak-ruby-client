@@ -69,6 +69,11 @@ module Keycloak
           JSON.parse(get(url, params: params)).map { |user| Model::UserRepresentation.new(user) }
         end
       end
+
+      # @param id [String] user id
+      def delete_user(id)
+        delete("#{user_resources_url}/#{id}", headers: {content_type: :json})
+      end
     end
   end
 end
